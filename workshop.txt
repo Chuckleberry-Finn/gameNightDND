@@ -1,7 +1,7 @@
 version=1
 title=Chuck-Template
-description=[h2]Brief 1 sentence description.[/h2]
-description=[h3]Commissioned by [b]client name[/b][/h3]
+title=Game Night: Dungeons and Dragons
+description=[h2]Add-On for [url=https://steamcommunity.com/sharedfiles/filedetails/?id=3058279917]GameNight[/url].[/h2]
 description=
 description=[url=https://ko-fi.com/chuckleberryfinn][img]https://raw.githubusercontent.com/ChuckTheSheep/chuckImages/main/kofi.png[/img][/url][url=https://discord.gg/SReMnbV4V7][img]https://raw.githubusercontent.com/Chuckleberry-Finn/chuckImages/main/PZmodCommBanner3.png[/img][/url]
 description=
@@ -10,9 +10,10 @@ description=[img]https://raw.githubusercontent.com/Chuckleberry-Finn/chuckImages
 description=[img]https://raw.githubusercontent.com/Chuckleberry-Finn/chuckImages/main/bugHunt.png[/img]
 description=[quote][b]Windows:[/b] %userprofile%\Zomboid\console.txt[/quote]
 description=[quote][b]Mac/Linux:[/b] $User\Zomboid\console.txt[/quote]
-description=Upload this file [b]in entirety[/b] to [url=https://github.com/Chuckleberry-Finn?tab=repositories]Github[/url] as an issue.
+description=Upload this file [b]in entirety[/b] to [url=https://github.com/Chuckleberry-Finn/gameNightDND]Github[/url] as an issue.
 description=Share the link in a comment below if it is urgent.
 description=
+description=description=[url=https://github.com/Chuckleberry-Finn/game-night][img]https://raw.githubusercontent.com/Chuckleberry-Finn/chuckImages/main/steamNoGithubYes.png[/img][/url]
 description=
 description=
 description=[h3]Copyright 2024 Chuckleberry Finn. This item is not authorized for posting on Steam, except under the Steam account named Chuckleberry Finn.[/h3]
