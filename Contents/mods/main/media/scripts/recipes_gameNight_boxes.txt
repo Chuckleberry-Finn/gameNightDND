@@ -1,0 +1,7 @@
+module Base
+{
+
+    recipe Unseal Box { DNDBox_sealed, Result:DNDBox, CanBeDoneFromFloor:true, OnCreate:Recipe.GameNight.Unbox, Time:50.0, }
+
+
+}

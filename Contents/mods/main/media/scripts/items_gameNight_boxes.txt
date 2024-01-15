@@ -1,0 +1,14 @@
+module Base
+{
+    item DNDBox
+        {
+            DisplayCategory = GameBox, WeightReduction = 20, Weight = 0.1, Type = Container, Capacity = 2,
+            DisplayName = D&D Box, Icon = Boxes/DNDBox, WorldStaticModel = DNDBox,
+        }
+
+    item DNDBox_sealed
+        {
+            DisplayCategory = GameBox, WeightReduction = 20, Weight = 0.1, Type = Normal, Capacity = 2,
+            DisplayName = D&D Box (Sealed), Icon = Boxes/DNDBox, WorldStaticModel = DNDBox,
+        }
+}
