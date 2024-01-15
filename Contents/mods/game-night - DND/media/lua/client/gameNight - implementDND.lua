@@ -9,7 +9,7 @@ gamePieceAndBoardHandler.registerTypes({"Base.StellaOcta","Base.Dice4", "Base.Di
 
 
 ---Because I hate copy pasted code - this iterates through the side values and registers their special actions.
-local sides = {"4","6","8","10","12","20"}
+local sides = {4,6,8,10,12,20}
 for _,side in pairs(sides) do
     gamePieceAndBoardHandler.registerSpecial("Base.Dice"..side, { actions = { rollDie=side }, shiftAction = "rollDie", })
 end

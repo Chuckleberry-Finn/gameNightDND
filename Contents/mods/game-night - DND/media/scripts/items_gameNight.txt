@@ -18,7 +18,7 @@ module Base
 
     item Dice10 {
         DisplayCategory = GamePiece, Weight = 0.01, Type = Normal,
-        DisplayName = Dice, Icon = OutOfPlayTextures/Dice1010, WorldStaticModel = dice10,
+        DisplayName = Dice, Icon = OutOfPlayTextures/Dice100, WorldStaticModel = dice10,
     }
 
     item Dice12 {

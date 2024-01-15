@@ -14,6 +14,8 @@ gameNightDistro.gameNightBoxes["DNDBox"] = {
         "Dice12", 9999,
         "Dice20", 9999,
 
+        "StellaOcta", 1,
+
         "Pencil", 9999, "Pencil", 9999, "Eraser", 9999, "Eraser", 9999,
 
         "SheetPaper2", 9999, "SheetPaper2", 9999, "SheetPaper2", 9999, "SheetPaper2", 9999, "SheetPaper2", 9999, "SheetPaper2", 9999,
