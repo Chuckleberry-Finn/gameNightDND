@@ -3,32 +3,32 @@ module Base
 
     item Dice4 {
         DisplayCategory = GamePiece, Weight = 0.01, Type = Normal,
-        DisplayName = D4, Icon = OutOfPlayTextures/Dice44, WorldStaticModel = dice4,
+        DisplayName = D4, Icon = OutOfPlayTextures/Dice4, WorldStaticModel = dice4,
     }
 
     item Dice6 {
         DisplayCategory = GamePiece, Weight = 0.01, Type = Normal,
-        DisplayName = D6, Icon = OutOfPlayTextures/Dice66, WorldStaticModel = dice6,
+        DisplayName = D6, Icon = OutOfPlayTextures/Dice6, WorldStaticModel = dice6,
     }
 
     item Dice8 {
         DisplayCategory = GamePiece, Weight = 0.01, Type = Normal,
-        DisplayName = D8, Icon = OutOfPlayTextures/Dice88, WorldStaticModel = dice8,
+        DisplayName = D8, Icon = OutOfPlayTextures/Dice8, WorldStaticModel = dice8,
     }
 
     item Dice10 {
         DisplayCategory = GamePiece, Weight = 0.01, Type = Normal,
-        DisplayName = D10, Icon = OutOfPlayTextures/Dice1010, WorldStaticModel = dice10,
+        DisplayName = D10, Icon = OutOfPlayTextures/Dice10, WorldStaticModel = dice10,
     }
 
     item Dice12 {
         DisplayCategory = GamePiece, Weight = 0.01, Type = Normal,
-        DisplayName = D12, Icon = OutOfPlayTextures/Dice1212, WorldStaticModel = dice12,
+        DisplayName = D12, Icon = OutOfPlayTextures/Dice12, WorldStaticModel = dice12,
     }
 
     item Dice20 {
         DisplayCategory = GamePiece, Weight = 0.01, Type = Normal,
-        DisplayName = D20, Icon = OutOfPlayTextures/Dice2020, WorldStaticModel = dice20,
+        DisplayName = D20, Icon = OutOfPlayTextures/Dice20, WorldStaticModel = dice20,
     }
 
     item StellaOcta {
