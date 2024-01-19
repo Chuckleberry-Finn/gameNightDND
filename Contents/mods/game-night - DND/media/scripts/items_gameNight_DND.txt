@@ -1,6 +1,26 @@
 module Base
 {
 
+    item CharacterSheet {
+		DisplayCategory = GamePiece,
+		Weight = 0.1,
+		Type = Map,
+		DisplayName = Character Sheet,
+		Icon = OutOfPlayTextures\characterSheet,
+		Map = gameNight_CharacterSheet,
+		WorldStaticModel = CharacterSheet,
+    }
+
+    item DrawingPaper {
+		DisplayCategory = GamePiece,
+		Weight = 0.1,
+		Type = Map,
+		DisplayName = Drawing Paper,
+		Icon = OutOfPlayTextures\characterSheet,
+		Map = gameNight_DrawingPaper,
+		WorldStaticModel = DrawingPaper,
+    }
+
     item Dice4 {
         DisplayCategory = GamePiece, Weight = 0.01, Type = Normal,
         DisplayName = D4, Icon = OutOfPlayTextures/Dice4, WorldStaticModel = dice4,
