@@ -13,10 +13,11 @@ gameNightDistro.gameNightBoxes["DNDBox"] = {
         
         "CharacterSheet", 9999, "CharacterSheet", 9999, "CharacterSheet", 9999, "CharacterSheet", 9999, "CharacterSheet", 9999, "CharacterSheet", 9999,
         "CharacterSheet", 9999, "CharacterSheet", 9999, "CharacterSheet", 9999, "CharacterSheet", 9999, "CharacterSheet", 9999, "CharacterSheet", 9999,
-        "DrawingPaper", 9999, "DrawingPaper", 9999, "DrawingPaper", 9999, "DrawingPaper", 9999, "DrawingPaper", 9999, "DrawingPaper", 9999,
-        "DrawingPaper", 9999, "DrawingPaper", 9999, "DrawingPaper", 9999, "DrawingPaper", 9999, "DrawingPaper", 9999, "DrawingPaper", 9999,
-        "DrawingPaper", 9999, "DrawingPaper", 9999, "DrawingPaper", 9999, "DrawingPaper", 9999, "DrawingPaper", 9999, "DrawingPaper", 9999,
-        "DrawingPaper", 9999, "DrawingPaper", 9999, "DrawingPaper", 9999, "DrawingPaper", 9999, "DrawingPaper", 9999, "DrawingPaper", 9999,
+
+        --"DrawingPaper", 9999, "DrawingPaper", 9999, "DrawingPaper", 9999, "DrawingPaper", 9999, "DrawingPaper", 9999, "DrawingPaper", 9999,
+        --"DrawingPaper", 9999, "DrawingPaper", 9999, "DrawingPaper", 9999, "DrawingPaper", 9999, "DrawingPaper", 9999, "DrawingPaper", 9999,
+        --"DrawingPaper", 9999, "DrawingPaper", 9999, "DrawingPaper", 9999, "DrawingPaper", 9999, "DrawingPaper", 9999, "DrawingPaper", 9999,
+        --"DrawingPaper", 9999, "DrawingPaper", 9999, "DrawingPaper", 9999, "DrawingPaper", 9999, "DrawingPaper", 9999, "DrawingPaper", 9999,
     },
     junk = { rolls = 1, items = {} }, fillRand = 0,
 }

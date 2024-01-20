@@ -15,6 +15,10 @@ function dndPaper.overlayPNG(mapUI, x, y, scale, layerName, tex, alpha)
 end
 
 
+dndPaper.types = {}
+function dndPaper.isValid(itemType) return (dndPaper.types[itemType]) end
+
+
 function dndPaper.applyPaperInit(itemType)
 
     local paperX1, paperY1 = 10, 10
@@ -27,6 +31,8 @@ function dndPaper.applyPaperInit(itemType)
         mapAPI:setBoundsInSquares(paperX1, paperY1, paperX2, paperY2)
         dndPaper.overlayPNG(mapUI, paperX1, paperY1, 1.0, "lootMapPNG", "media/ui/"..itemType..".png", 1.0)
     end
+
+    dndPaper.types[itemType] = true
 end
 
 
