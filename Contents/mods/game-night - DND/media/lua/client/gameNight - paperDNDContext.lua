@@ -21,11 +21,13 @@ function paperContext.addInventoryItemContext(playerID, context, items)
 
             local readOption = context:getOptionFromName(getText("ContextMenu_CheckMap"))
             readOption.name = getText("ContextMenu_Read")
-            --context:addOption(getText("ContextMenu_CheckMap"), map, ISInventoryPaneContextMenu.onCheckMap, player);
+            readOption.onSelect = dndPaper.onCheckPaper
+            --context:addOption(getText("ContextMenu_CheckMap"), map, ISInventoryPaneContextMenu.onCheckMap, player)
 
             local renameOption = context:getOptionFromName(getText("ContextMenu_RenameMap"))
             renameOption.name = getText("ContextMenu_RenameBag")
-            --context:addOption(getText("ContextMenu_RenameMap"), map, ISInventoryPaneContextMenu.onRenameMap, player);
+            readOption.onSelect = dndPaper.onCheckPaper
+            --context:addOption(getText("ContextMenu_RenameMap"), map, ISInventoryPaneContextMenu.onRenameMap, player)
         end
         break
     end
