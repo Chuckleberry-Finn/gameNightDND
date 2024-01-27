@@ -2,6 +2,77 @@ local paperContext = {}
 
 local dndPaper = require "gameNight - paperDND"
 
+function dndPaper.onCheckPaper(map, player)
+    local playerObj = getSpecificPlayer(player)
+    if luautils.haveToBeTransfered(playerObj, map) then
+        local action = ISInventoryTransferAction:new(playerObj, map, map:getContainer(), playerObj:getInventory())
+        action:setOnComplete(dndPaper.onCheckPaper, map, player)
+        ISTimedActionQueue.add(action)
+        return
+    end
+
+    if JoypadState.players[player+1] then
+        local inv = getPlayerInventory(player)
+        local loot = getPlayerLoot(player)
+        inv:setVisible(false)
+        loot:setVisible(false)
+    end
+
+    local titleBarHgt = ISCollapsableWindow.TitleBarHeight()
+
+    map:getModData()["gameNight_paperPage"] = map:getModData()["gameNight_paperPage"] or 1
+    local paperPage = map:getModData()["gameNight_paperPage"]
+
+    local texPath = "media/ui/"..map:getType()..paperPage..".png"
+    local texture = getTexture(texPath)
+    if not texture then return end
+
+    local paperX2, paperY2 = texture:getWidth(), texture:getHeight()+titleBarHgt
+    local ratio = paperX2/paperY2
+    local height = getPlayerScreenHeight(player)*0.66
+    local width = (height * ratio)
+
+    local centerX, centerY = (getPlayerScreenWidth(player)/2)-(width/2), (getPlayerScreenHeight(player)/2)-(height/2)
+
+    local mapUI = ISMap:new(centerX, centerY, width+40, height+40, map, player)
+    mapUI:initialise()
+
+    local wrap = mapUI:wrapInCollapsableWindow(map:getName(), false, ISMapWrapper)
+    wrap:setInfo(getText("IGUI_Map_Info"))
+    wrap:setWantKeyEvents(true)
+    mapUI.wrap = wrap
+    wrap.mapUI = mapUI
+
+    wrap:setVisible(true)
+    wrap:addToUIManager()
+
+    wrap.infoButton:setVisible(false)
+
+    print("here")
+    ---@type UIWorldMapV1
+    local mapAPI = mapUI.javaObject:getAPIv1()
+    ---@type WorldMapStyleV1
+    local styleAPI = mapAPI:getStyleAPI()
+
+    print("map stuff: ", mapAPI, "\n- ", styleAPI)
+    local layer = styleAPI:newTextureLayer("paperDND")
+    layer:setMinZoom(25)
+    layer:addFill(0, 255, 255, 255, 255)
+
+    print(" -count: ", styleAPI:getLayerCount())
+    --layer:removeAllTexture()
+    print(" +: ", texPath)
+    layer:addTexture(0, texPath)
+
+    print(" ts: ", layer:getTextureStops())
+    layer:setBoundsInSquares(10, 10, 10 + paperX2, 10 + paperY2)
+
+
+    if JoypadState.players[player+1] then setJoypadFocus(player, mapUI) end
+end
+
+
+
 ---@param context ISContextMenu
 function paperContext.addInventoryItemContext(playerID, context, items)
     local playerObj = getSpecificPlayer(playerID)
