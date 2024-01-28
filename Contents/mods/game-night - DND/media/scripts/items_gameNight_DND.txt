@@ -9,6 +9,7 @@ module Base
 		Icon = OutOfPlayTextures\characterSheet,
 		Map = gameNight_CharacterSheet,
 		WorldStaticModel = CharacterSheet,
+		gameNight_paperPageMax = 2
     }
 
     item DrawingPaper {

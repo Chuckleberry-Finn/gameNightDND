@@ -22,6 +22,7 @@ function dndPaper.onCheckPaper(map, player)
 
     map:getModData()["gameNight_paperPage"] = map:getModData()["gameNight_paperPage"] or 1
     local paperPage = map:getModData()["gameNight_paperPage"]
+    ---gameNight_paperPageMax
 
     local texPath = "media/ui/"..map:getType()..paperPage..".png"
     local texture = getTexture(texPath)
