@@ -24,10 +24,11 @@ end
 
 function dndPaper:updatePageButtons()
     local map = self.mapObj
-    local page = map:getModData()["gameNight_paperPage"]
+    local page = map:getModData()["gameNight_paperPage"] or 1
     local maxPage = map:getModData()["gameNight_paperPageMax"] or 1
     self.prevPage.enable = not (page == 1)
     self.nextPage.enable = not (page == maxPage)
+    self.pageLabel:setName(page.."/"..maxPage)
 end
 
 function dndPaper:onNextPage() dndPaper.onPageSelect(self,1) end
@@ -56,13 +57,13 @@ function dndPaper.onCheckPaper(map, player)
 
     map:getModData()["gameNight_paperPage"] = map:getModData()["gameNight_paperPage"] or 1
     local paperPage = map:getModData()["gameNight_paperPage"]
-    ---gameNight_paperPageMax
+    local maxPage = map:getModData()["gameNight_paperPageMax"] or 1
 
     local texPath = "media/ui/"..map:getType()..paperPage..".png"
     local texture = getTexture(texPath)
     if not texture then return end
 
-    local paperX2, paperY2 = texture:getWidth(), texture:getHeight()+titleBarHgt
+    local paperX2, paperY2 = texture:getWidth()+10, texture:getHeight()+10+titleBarHgt
     local ratio = paperX2/paperY2
     local height = getPlayerScreenHeight(player)*0.66
     local width = (height * ratio)
@@ -71,6 +72,11 @@ function dndPaper.onCheckPaper(map, player)
 
     local mapUI = ISMap:new(centerX, centerY, width+40, height+40, map, player)
     mapUI:initialise()
+
+    mapUI.pageLabel = ISLabel:new(mapUI:getWidth()-35, mapUI.ok.y-20, 16, paperPage.."/"..maxPage, 0, 0, 0, 0.8, UIFont.Small, true)
+    mapUI.pageLabel:initialise()
+    mapUI.pageLabel:instantiate()
+    mapUI:addChild(mapUI.pageLabel)
 
     mapUI.nextPage = ISButton:new(mapUI:getWidth()-35, mapUI.ok.y, 25, mapUI.ok.height, getText(">"), mapUI, dndPaper.onNextPage)
     mapUI.nextPage:initialise()
