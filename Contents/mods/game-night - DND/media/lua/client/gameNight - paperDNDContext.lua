@@ -2,6 +2,40 @@ local paperContext = {}
 
 local dndPaper = require "gameNight - paperDND"
 
+
+function dndPaper:onPageSelect(pageChange)
+    local map = self.mapObj
+    local maxPage = map:getModData()["gameNight_paperPageMax"] or 1
+    local page = math.min(maxPage, math.max(1,(map:getModData()["gameNight_paperPage"] or 1) + (pageChange or 0)))
+    map:getModData()["gameNight_paperPage"] = page
+
+    dndPaper.updatePageButtons(self)
+
+    local texPath = "media/ui/"..map:getType()..page..".png"
+    ---@type UIWorldMapV1
+    local mapAPI = self.javaObject:getAPIv1()
+    ---@type WorldMapStyleV1
+    local styleAPI = mapAPI:getStyleAPI()
+    ---@type WorldMapStyleV1.WorldMapTextureStyleLayerV1
+    local layer = styleAPI:getLayerByName("paperDND")
+    layer:removeAllTexture()
+    layer:addTexture(0, texPath)
+end
+
+function dndPaper:updatePageButtons()
+    local map = self.mapObj
+    local page = map:getModData()["gameNight_paperPage"]
+    local maxPage = map:getModData()["gameNight_paperPageMax"] or 1
+    self.prevPage.enable = not (page == 1)
+    self.nextPage.enable = not (page == maxPage)
+end
+
+function dndPaper:onNextPage() dndPaper.onPageSelect(self,1) end
+
+
+function dndPaper:onPrevPage() dndPaper.onPageSelect(self,-1) end
+
+
 function dndPaper.onCheckPaper(map, player)
     local playerObj = getSpecificPlayer(player)
     if luautils.haveToBeTransfered(playerObj, map) then
@@ -38,6 +72,18 @@ function dndPaper.onCheckPaper(map, player)
     local mapUI = ISMap:new(centerX, centerY, width+40, height+40, map, player)
     mapUI:initialise()
 
+    mapUI.nextPage = ISButton:new(mapUI:getWidth()-35, mapUI.ok.y, 25, mapUI.ok.height, getText(">"), mapUI, dndPaper.onNextPage)
+    mapUI.nextPage:initialise()
+    mapUI.nextPage:instantiate()
+    mapUI.nextPage.borderColor = {r=1, g=1, b=1, a=0.4}
+    mapUI:addChild(mapUI.nextPage)
+
+    mapUI.prevPage = ISButton:new(mapUI.nextPage.x-29, mapUI.ok.y, 25, mapUI.ok.height, getText("<"), mapUI, dndPaper.onPrevPage)
+    mapUI.prevPage:initialise()
+    mapUI.prevPage:instantiate()
+    mapUI.prevPage.borderColor = {r=1, g=1, b=1, a=0.4}
+    mapUI:addChild(mapUI.prevPage)
+
     local wrap = mapUI:wrapInCollapsableWindow(map:getName(), false, ISMapWrapper)
     wrap:setInfo(getText("IGUI_Map_Info"))
     wrap:setWantKeyEvents(true)
@@ -46,28 +92,19 @@ function dndPaper.onCheckPaper(map, player)
 
     wrap:setVisible(true)
     wrap:addToUIManager()
-
     wrap.infoButton:setVisible(false)
 
-    print("here")
     ---@type UIWorldMapV1
     local mapAPI = mapUI.javaObject:getAPIv1()
     ---@type WorldMapStyleV1
     local styleAPI = mapAPI:getStyleAPI()
-
-    print("map stuff: ", mapAPI, "\n- ", styleAPI)
     local layer = styleAPI:newTextureLayer("paperDND")
     layer:setMinZoom(25)
     layer:addFill(0, 255, 255, 255, 255)
-
-    print(" -count: ", styleAPI:getLayerCount())
-    --layer:removeAllTexture()
-    print(" +: ", texPath)
     layer:addTexture(0, texPath)
-
-    print(" ts: ", layer:getTextureStops())
     layer:setBoundsInSquares(10, 10, 10 + paperX2, 10 + paperY2)
 
+    dndPaper.updatePageButtons(mapUI)
 
     if JoypadState.players[player+1] then setJoypadFocus(player, mapUI) end
 end
