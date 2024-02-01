@@ -7,9 +7,6 @@ function dndPaper:onPageSelect(pageChange)
     local map = self.mapObj
     local maxPage = map:getModData()["gameNight_paperPageMax"] or 1
     local page = math.min(maxPage, math.max(1,(map:getModData()["gameNight_paperPage"] or 1) + (pageChange or 0)))
-    map:getModData()["gameNight_paperPage"] = page
-
-    dndPaper.updatePageButtons(self)
 
     local texPath = "media/ui/"..map:getType()..page..".png"
     ---@type UIWorldMapV1
@@ -20,7 +17,14 @@ function dndPaper:onPageSelect(pageChange)
     local layer = styleAPI:getLayerByName("paperDND")
     layer:removeAllTexture()
     layer:addTexture(0, texPath)
+
+    local symbolsAPI = mapAPI:getSymbolsAPI()
+    dndPaper.loadSymbols(map, symbolsAPI, page)
+
+    map:getModData()["gameNight_paperPage"] = page
+    dndPaper.updatePageButtons(self)
 end
+
 
 function dndPaper:updatePageButtons()
     local map = self.mapObj
@@ -30,11 +34,61 @@ function dndPaper:updatePageButtons()
     self.nextPage.enable = not (page == maxPage)
     self.pageLabel:setName(page.."/"..maxPage)
 end
-
 function dndPaper:onNextPage() dndPaper.onPageSelect(self,1) end
-
-
 function dndPaper:onPrevPage() dndPaper.onPageSelect(self,-1) end
+
+
+---@param symbolsAPI WorldMapSymbolsV1
+function dndPaper.loadSymbols(map, symbolsAPI, newPage, noSave)
+
+    local currentPage = map:getModData()["gameNight_paperPage"] or 1
+    map:getModData()["gameNight_symbolsOnPage"] = map:getModData()["gameNight_symbolsOnPage"] or {}
+
+
+    if noSave~=true then
+        local symbolsOnPage = map:getModData()["gameNight_symbolsOnPage"]
+        map:getModData()["gameNight_symbolsOnPage"][currentPage] = {}
+
+        for i=symbolsAPI:getSymbolCount()-1, 0, -1 do
+            ---@type WorldMapSymbolsV1.WorldMapBaseSymbolV1|WorldMapSymbolsV1.WorldMapTextSymbolV1|WorldMapSymbolsV1.WorldMapTextureSymbolV1
+            local symbol = symbolsAPI:getSymbolByIndex(i)
+
+            local symbolAdded = {
+                r = symbol:getRed(),
+                g = symbol:getGreen(),
+                b = symbol:getBlue(),
+                a = symbol:getAlpha(),
+                x = symbol:getWorldX(),
+                y = symbol:getWorldY()
+            }
+
+            if symbol:isTexture() then symbolAdded.symbolID = symbol:getSymbolID() end
+            if symbol:isText() then symbolAdded.text = symbol:getTranslatedText() end
+
+            table.insert(map:getModData()["gameNight_symbolsOnPage"][currentPage], symbolAdded)
+        end
+    end
+
+    if newPage then
+        symbolsAPI:clear()
+        local newPageSymbols = map:getModData()["gameNight_symbolsOnPage"][newPage]
+        if newPageSymbols then
+            for _,symbol in ipairs(newPageSymbols) do
+
+                local addedSymbol
+
+                if symbol.symbolID then addedSymbol = symbolsAPI:addTexture(symbol.symbolID, symbol.x, symbol.y) end
+                if symbol.text then addedSymbol = symbolsAPI:addTranslatedText(symbol.text, UIFont.Handwritten, symbol.x, symbol.y) end
+
+                if addedSymbol then
+                    addedSymbol:setRGBA(symbol.r, symbol.g, symbol.b, 1.0)
+                    addedSymbol:setAnchor(0.5, 0.5)
+                    addedSymbol:setScale(ISMap.SCALE)
+                end
+            end
+        end
+    end
+end
 
 
 function dndPaper.onCheckPaper(map, player)
@@ -104,6 +158,10 @@ function dndPaper.onCheckPaper(map, player)
     local mapAPI = mapUI.javaObject:getAPIv1()
     ---@type WorldMapStyleV1
     local styleAPI = mapAPI:getStyleAPI()
+
+    local symbolsAPI = mapAPI:getSymbolsAPI()
+    dndPaper.loadSymbols(map, symbolsAPI, paperPage, true)
+
     local layer = styleAPI:newTextureLayer("paperDND")
     layer:setMinZoom(25)
     layer:addFill(0, 255, 255, 255, 255)
