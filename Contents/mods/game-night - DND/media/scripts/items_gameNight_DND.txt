@@ -9,7 +9,7 @@ module Base
 		Icon = OutOfPlayTextures\characterSheet,
 		Map = gameNight_CharacterSheet,
 		WorldStaticModel = CharacterSheet,
-		gameNight_paperPageMax = 2
+		gameNight_paperPageMax = 2,
     }
 
     item DrawingPaper {
@@ -20,6 +20,7 @@ module Base
 		Icon = OutOfPlayTextures\characterSheet,
 		Map = gameNight_DrawingPaper,
 		WorldStaticModel = DrawingPaper,
+		gameNight_paperPageMax = 2,
     }
 
     item Dice4 {

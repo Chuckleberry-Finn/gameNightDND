@@ -44,12 +44,10 @@ function dndPaper.loadSymbols(map, symbolsAPI, newPage, noSave)
     local currentPage = map:getModData()["gameNight_paperPage"] or 1
     map:getModData()["gameNight_symbolsOnPage"] = map:getModData()["gameNight_symbolsOnPage"] or {}
 
-
     if noSave~=true then
-        local symbolsOnPage = map:getModData()["gameNight_symbolsOnPage"]
         map:getModData()["gameNight_symbolsOnPage"][currentPage] = {}
 
-        for i=symbolsAPI:getSymbolCount()-1, 0, -1 do
+        for i=0, symbolsAPI:getSymbolCount()-1 do
             ---@type WorldMapSymbolsV1.WorldMapBaseSymbolV1|WorldMapSymbolsV1.WorldMapTextSymbolV1|WorldMapSymbolsV1.WorldMapTextureSymbolV1
             local symbol = symbolsAPI:getSymbolByIndex(i)
 
@@ -92,6 +90,9 @@ end
 
 
 function dndPaper.onCheckPaper(map, player)
+
+    if dndPaper.instance and dndPaper.instance:isVisible() then return end
+
     local playerObj = getSpecificPlayer(player)
     if luautils.haveToBeTransfered(playerObj, map) then
         local action = ISInventoryTransferAction:new(playerObj, map, map:getContainer(), playerObj:getInventory())
@@ -126,6 +127,8 @@ function dndPaper.onCheckPaper(map, player)
 
     local mapUI = ISMap:new(centerX, centerY, width+40, height+40, map, player)
     mapUI:initialise()
+
+    dndPaper.instance = mapUI
 
     mapUI.pageLabel = ISLabel:new(mapUI:getWidth()-35, mapUI.ok.y-20, 16, paperPage.."/"..maxPage, 0, 0, 0, 0.8, UIFont.Small, true)
     mapUI.pageLabel:initialise()
