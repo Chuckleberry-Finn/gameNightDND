@@ -89,6 +89,12 @@ function dndPaper.loadSymbols(map, symbolsAPI, newPage, noSave)
 end
 
 
+function dndPaper:onRender()
+    ISMap.prerender(self)
+    self.symbolsUI:setX(self:getX()+self:getWidth()+8)
+end
+
+
 function dndPaper.onCheckPaper(map, player)
 
     if dndPaper.instance and dndPaper.instance:isVisible() then return end
@@ -156,6 +162,11 @@ function dndPaper.onCheckPaper(map, player)
     wrap:setVisible(true)
     wrap:addToUIManager()
     wrap.infoButton:setVisible(false)
+
+    dndPaper.onRender(mapUI)
+
+    mapUI:removeChild(mapUI.symbolsUI)
+    mapUI.symbolsUI:addToUIManager()
 
     ---@type UIWorldMapV1
     local mapAPI = mapUI.javaObject:getAPIv1()
