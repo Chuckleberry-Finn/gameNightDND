@@ -2,15 +2,24 @@ local paperContext = {}
 
 local dndPaper = require "gameNight - paperDND"
 
-paperContext.dndPaperWrapper = ISMapWrapper:derive("paperContext.dndPaperWrapper")
 paperContext.dndPaperUI = ISMap:derive("paperContext.dndPaperUI")
+paperContext.dndPaperWrapper = ISMapWrapper:derive("paperContext.dndPaperWrapper")
+paperContext.dndPaperSymbols = ISWorldMapSymbols:derive("paperContext.dndPaperSymbols")
 
-function paperContext.dndPaperUI:prerender()
-    ISMap.prerender(self)
-    if self.symbolsUI:isVisible() then
-        self.symbolsUI:setX(self.wrap:getX()+self.wrap:getWidth()+8)
-        self.symbolsUI:setY(self.wrap:getY())
+
+function paperContext.dndPaperSymbols:renderSymbol(symbol, x, y)
+    --[[
+    if self.mapUI:isMouseOver() then
+        if not symbol then return end
+        local scale = ISMap.SCALE * self.mapAPI:getWorldScale()
+        local sym = symbol
+        local symW = sym.image:getWidth() / 2 * scale
+        local symH = sym.image:getHeight() / 2 * scale
+        self.mapUI:drawTextureScaled(sym.image, x-symW, y-symH,
+                sym.image:getWidth() * scale, sym.image:getHeight() * scale,
+                1, sym.textureColor.r, sym.textureColor.g, sym.textureColor.b)
     end
+    --]]
 end
 
 
@@ -20,30 +29,93 @@ function paperContext.dndPaperWrapper:close()
 end
 
 
-function ISWorldMapSymbolTool_AddSymbol:render()
-    if self.mapUI:isMouseOver() then
-        print("xxx")
-        if (self.symbolsUI.playerNum ~= 0) or (JoypadState.players[self.symbolsUI.playerNum+1] and not wasMouseActiveMoreRecentlyThanJoypad()) then
-            self.symbolsUI:renderSymbol(self.symbolsUI.selectedSymbol, self.mapUI.width / 2, self.mapUI.height / 2)
-        else
-            self.symbolsUI:renderSymbol(self.symbolsUI.selectedSymbol, self.mapUI:getMouseX(), self.mapUI:getMouseY())
+function paperContext.dndPaperSymbols:prerender()
+    self:setX(self.mapUI.wrap:getX()+self.mapUI.wrap:getWidth()+8)
+    self:setY(self.mapUI.wrap:getY())
+    ISWorldMapSymbols.prerender(self)
+end
+
+
+function paperContext.dndPaperUI:render()
+    if self.symbolsUI:isVisible() then
+
+        if self:isMouseOver() then
+            local sym = self.symbolsUI.selectedSymbol
+            if sym then
+                local scale = ISMap.SCALE * self.mapAPI:getWorldScale()
+                local symW = sym.image:getWidth() / 2 * scale
+                local symH = sym.image:getHeight() / 2 * scale
+                self:drawTextureScaled(sym.image, self:getMouseX()-symW, self:getMouseY()-symH,
+                        sym.image:getWidth() * scale, sym.image:getHeight() * scale,
+                        1, sym.textureColor.r, sym.textureColor.g, sym.textureColor.b)
+            end
         end
     end
+    ISMap.render(self)
 end
 
-function ISWorldMapSymbols:renderSymbol(symbol, x, y)
-    if not symbol then return end
 
-    print(symbol," x:",x,", y:",y)
+local FONT_HGT_SMALL = getTextManager():getFontHeight(UIFont.Small)
+function paperContext.dndPaperUI:createChildren()
 
-    local scale = ISMap.SCALE * self.mapAPI:getWorldScale()
-    local sym = symbol
-    local symW = sym.image:getWidth() / 2 * scale
-    local symH = sym.image:getHeight() / 2 * scale
-    self.mapUI:drawTextureScaled(sym.image, x-symW, y-symH,
-            sym.image:getWidth() * scale, sym.image:getHeight() * scale,
-            1, sym.textureColor.r, sym.textureColor.g, sym.textureColor.b)
+    local symbolsWidth = paperContext.dndPaperSymbols.RequiredWidth()
+    self.symbolsUI = paperContext.dndPaperSymbols:new(self.width - 10 - symbolsWidth, 10, symbolsWidth, 200, self)
+    --self:addChild(self.symbolsUI)
+    self.symbolsUI:addToUIManager()
+    self.symbolsUI:setVisible(false)
+
+    local buttonHgt = FONT_HGT_SMALL + 6
+    local buttonPadBottom = 4
+    local buttonY = self.height - buttonPadBottom - buttonHgt
+
+    self.ok = ISButton:new(10, buttonY, 100, buttonHgt, getText("UI_Close"), self, ISMap.onButtonClick)
+    self.ok.internal = "OK"
+    self.ok:initialise()
+    self.ok:instantiate()
+    self.ok.borderColor = {r=1, g=1, b=1, a=0.4}
+    self:addChild(self.ok)
+
+    self.editSymbolsBtn = ISButton:new(self.ok:getRight() + 10, buttonY, 150, buttonHgt, getText("IGUI_Map_EditMarkings"), self, ISMap.onButtonClick)
+    self.editSymbolsBtn.internal = "SYMBOLS"
+    self.editSymbolsBtn:initialise()
+    self.editSymbolsBtn:instantiate()
+    self.editSymbolsBtn.borderColor = {r=1, g=1, b=1, a=0.4}
+    self:addChild(self.editSymbolsBtn)
+
+    self.scaleBtn = ISButton:new(self.editSymbolsBtn:getRight() + 10, buttonY, 50, buttonHgt, getText("IGUI_Map_Scale"), self, ISMap.onButtonClick)
+    self.scaleBtn.internal = "SCALE"
+    self.scaleBtn:initialise()
+    self.scaleBtn:instantiate()
+    self.scaleBtn.borderColor = {r=1, g=1, b=1, a=0.4}
+    self:addChild(self.scaleBtn)
+
+    -- Joypad only
+    self.placeSymbBtn = ISButton:new(self.editSymbolsBtn:getRight() + 10, buttonY, 150, buttonHgt, getText("IGUI_Map_PlaceSymbol"), self, ISMap.onButtonClick)
+    self.placeSymbBtn.internal = "PLACESYMBOL"
+    self.placeSymbBtn:initialise()
+    self.placeSymbBtn:instantiate()
+    self.placeSymbBtn.borderColor = {r=1, g=1, b=1, a=0.4}
+    self.placeSymbBtn:setVisible(false)
+    self:addChild(self.placeSymbBtn)
+
+    self.pageLabel = ISLabel:new(self:getWidth()-35, self.ok.y-20, 16, self.paperPage.."/"..self.maxPage, 0, 0, 0, 0.8, UIFont.Small, true)
+    self.pageLabel:initialise()
+    self.pageLabel:instantiate()
+    self:addChild(self.pageLabel)
+
+    self.nextPage = ISButton:new(self:getWidth()-35, self.ok.y, 25, self.ok.height, getText(">"), self, paperContext.onNextPage)
+    self.nextPage:initialise()
+    self.nextPage:instantiate()
+    self.nextPage.borderColor = {r=1, g=1, b=1, a=0.4}
+    self:addChild(self.nextPage)
+
+    self.prevPage = ISButton:new(self.nextPage.x-29, self.ok.y, 25, self.ok.height, getText("<"), self, paperContext.onPrevPage)
+    self.prevPage:initialise()
+    self.prevPage:instantiate()
+    self.prevPage.borderColor = {r=1, g=1, b=1, a=0.4}
+    self:addChild(self.prevPage)
 end
+
 
 
 function paperContext:onPageSelect(pageChange)
@@ -169,26 +241,11 @@ function paperContext.onCheckPaper(map, player)
     local centerX, centerY = (getPlayerScreenWidth(player)/2)-(width/2), (getPlayerScreenHeight(player)/2)-(height/2)
 
     local mapUI = paperContext.dndPaperUI:new(centerX, centerY, width+40, height+40, map, player)
+    mapUI.paperPage = paperPage
+    mapUI.maxPage = maxPage
     mapUI:initialise()
 
     dndPaper.instance = mapUI
-
-    mapUI.pageLabel = ISLabel:new(mapUI:getWidth()-35, mapUI.ok.y-20, 16, paperPage.."/"..maxPage, 0, 0, 0, 0.8, UIFont.Small, true)
-    mapUI.pageLabel:initialise()
-    mapUI.pageLabel:instantiate()
-    mapUI:addChild(mapUI.pageLabel)
-
-    mapUI.nextPage = ISButton:new(mapUI:getWidth()-35, mapUI.ok.y, 25, mapUI.ok.height, getText(">"), mapUI, paperContext.onNextPage)
-    mapUI.nextPage:initialise()
-    mapUI.nextPage:instantiate()
-    mapUI.nextPage.borderColor = {r=1, g=1, b=1, a=0.4}
-    mapUI:addChild(mapUI.nextPage)
-
-    mapUI.prevPage = ISButton:new(mapUI.nextPage.x-29, mapUI.ok.y, 25, mapUI.ok.height, getText("<"), mapUI, paperContext.onPrevPage)
-    mapUI.prevPage:initialise()
-    mapUI.prevPage:instantiate()
-    mapUI.prevPage.borderColor = {r=1, g=1, b=1, a=0.4}
-    mapUI:addChild(mapUI.prevPage)
 
     local wrap = mapUI:wrapInCollapsableWindow(map:getName(), false, paperContext.dndPaperWrapper)
     wrap:setInfo(getText("IGUI_Map_Info"))
@@ -200,9 +257,6 @@ function paperContext.onCheckPaper(map, player)
     wrap:addToUIManager()
     wrap.infoButton:setVisible(false)
 
-    mapUI:removeChild(mapUI.symbolsUI)
-    mapUI.symbolsUI:addToUIManager()
-
     ---@type UIWorldMapV1
     local mapAPI = mapUI.javaObject:getAPIv1()
     ---@type WorldMapStyleV1
@@ -212,7 +266,7 @@ function paperContext.onCheckPaper(map, player)
     paperContext.loadSymbols(map, symbolsAPI, paperPage, true)
 
     local layer = styleAPI:newTextureLayer("paperDND")
-    layer:setMinZoom(25)
+    layer:setMinZoom(0)
     layer:addFill(0, 255, 255, 255, 255)
     layer:addTexture(0, texPath)
     layer:setBoundsInSquares(10, 10, 10 + paperX2, 10 + paperY2)
