@@ -2,8 +2,51 @@ local paperContext = {}
 
 local dndPaper = require "gameNight - paperDND"
 
+paperContext.dndPaperWrapper = ISMapWrapper:derive("paperContext.dndPaperWrapper")
+paperContext.dndPaperUI = ISMap:derive("paperContext.dndPaperUI")
 
-function dndPaper:onPageSelect(pageChange)
+function paperContext.dndPaperUI:prerender()
+    ISMap.prerender(self)
+    if self.symbolsUI:isVisible() then
+        self.symbolsUI:setX(self.wrap:getX()+self.wrap:getWidth()+8)
+        self.symbolsUI:setY(self.wrap:getY())
+    end
+end
+
+
+function paperContext.dndPaperWrapper:close()
+    self.mapUI.symbolsUI:removeFromUIManager()
+    ISMapWrapper.close(self)
+end
+
+
+function ISWorldMapSymbolTool_AddSymbol:render()
+    if self.mapUI:isMouseOver() then
+        print("xxx")
+        if (self.symbolsUI.playerNum ~= 0) or (JoypadState.players[self.symbolsUI.playerNum+1] and not wasMouseActiveMoreRecentlyThanJoypad()) then
+            self.symbolsUI:renderSymbol(self.symbolsUI.selectedSymbol, self.mapUI.width / 2, self.mapUI.height / 2)
+        else
+            self.symbolsUI:renderSymbol(self.symbolsUI.selectedSymbol, self.mapUI:getMouseX(), self.mapUI:getMouseY())
+        end
+    end
+end
+
+function ISWorldMapSymbols:renderSymbol(symbol, x, y)
+    if not symbol then return end
+
+    print(symbol," x:",x,", y:",y)
+
+    local scale = ISMap.SCALE * self.mapAPI:getWorldScale()
+    local sym = symbol
+    local symW = sym.image:getWidth() / 2 * scale
+    local symH = sym.image:getHeight() / 2 * scale
+    self.mapUI:drawTextureScaled(sym.image, x-symW, y-symH,
+            sym.image:getWidth() * scale, sym.image:getHeight() * scale,
+            1, sym.textureColor.r, sym.textureColor.g, sym.textureColor.b)
+end
+
+
+function paperContext:onPageSelect(pageChange)
     local map = self.mapObj
     local maxPage = map:getModData()["gameNight_paperPageMax"] or 1
     local page = math.min(maxPage, math.max(1,(map:getModData()["gameNight_paperPage"] or 1) + (pageChange or 0)))
@@ -19,14 +62,14 @@ function dndPaper:onPageSelect(pageChange)
     layer:addTexture(0, texPath)
 
     local symbolsAPI = mapAPI:getSymbolsAPI()
-    dndPaper.loadSymbols(map, symbolsAPI, page)
+    paperContext.loadSymbols(map, symbolsAPI, page)
 
     map:getModData()["gameNight_paperPage"] = page
-    dndPaper.updatePageButtons(self)
+    paperContext.updatePageButtons(self)
 end
 
 
-function dndPaper:updatePageButtons()
+function paperContext:updatePageButtons()
     local map = self.mapObj
     local page = map:getModData()["gameNight_paperPage"] or 1
     local maxPage = map:getModData()["gameNight_paperPageMax"] or 1
@@ -34,12 +77,12 @@ function dndPaper:updatePageButtons()
     self.nextPage.enable = not (page == maxPage)
     self.pageLabel:setName(page.."/"..maxPage)
 end
-function dndPaper:onNextPage() dndPaper.onPageSelect(self,1) end
-function dndPaper:onPrevPage() dndPaper.onPageSelect(self,-1) end
+function paperContext:onNextPage() paperContext.onPageSelect(self,1) end
+function paperContext:onPrevPage() paperContext.onPageSelect(self,-1) end
 
 
 ---@param symbolsAPI WorldMapSymbolsV1
-function dndPaper.loadSymbols(map, symbolsAPI, newPage, noSave)
+function paperContext.loadSymbols(map, symbolsAPI, newPage, noSave)
 
     local currentPage = map:getModData()["gameNight_paperPage"] or 1
     map:getModData()["gameNight_symbolsOnPage"] = map:getModData()["gameNight_symbolsOnPage"] or {}
@@ -89,20 +132,14 @@ function dndPaper.loadSymbols(map, symbolsAPI, newPage, noSave)
 end
 
 
-function dndPaper:onRender()
-    ISMap.prerender(self)
-    self.symbolsUI:setX(self:getX()+self:getWidth()+8)
-end
-
-
-function dndPaper.onCheckPaper(map, player)
+function paperContext.onCheckPaper(map, player)
 
     if dndPaper.instance and dndPaper.instance:isVisible() then return end
 
     local playerObj = getSpecificPlayer(player)
     if luautils.haveToBeTransfered(playerObj, map) then
         local action = ISInventoryTransferAction:new(playerObj, map, map:getContainer(), playerObj:getInventory())
-        action:setOnComplete(dndPaper.onCheckPaper, map, player)
+        action:setOnComplete(paperContext.onCheckPaper, map, player)
         ISTimedActionQueue.add(action)
         return
     end
@@ -131,7 +168,7 @@ function dndPaper.onCheckPaper(map, player)
 
     local centerX, centerY = (getPlayerScreenWidth(player)/2)-(width/2), (getPlayerScreenHeight(player)/2)-(height/2)
 
-    local mapUI = ISMap:new(centerX, centerY, width+40, height+40, map, player)
+    local mapUI = paperContext.dndPaperUI:new(centerX, centerY, width+40, height+40, map, player)
     mapUI:initialise()
 
     dndPaper.instance = mapUI
@@ -141,19 +178,19 @@ function dndPaper.onCheckPaper(map, player)
     mapUI.pageLabel:instantiate()
     mapUI:addChild(mapUI.pageLabel)
 
-    mapUI.nextPage = ISButton:new(mapUI:getWidth()-35, mapUI.ok.y, 25, mapUI.ok.height, getText(">"), mapUI, dndPaper.onNextPage)
+    mapUI.nextPage = ISButton:new(mapUI:getWidth()-35, mapUI.ok.y, 25, mapUI.ok.height, getText(">"), mapUI, paperContext.onNextPage)
     mapUI.nextPage:initialise()
     mapUI.nextPage:instantiate()
     mapUI.nextPage.borderColor = {r=1, g=1, b=1, a=0.4}
     mapUI:addChild(mapUI.nextPage)
 
-    mapUI.prevPage = ISButton:new(mapUI.nextPage.x-29, mapUI.ok.y, 25, mapUI.ok.height, getText("<"), mapUI, dndPaper.onPrevPage)
+    mapUI.prevPage = ISButton:new(mapUI.nextPage.x-29, mapUI.ok.y, 25, mapUI.ok.height, getText("<"), mapUI, paperContext.onPrevPage)
     mapUI.prevPage:initialise()
     mapUI.prevPage:instantiate()
     mapUI.prevPage.borderColor = {r=1, g=1, b=1, a=0.4}
     mapUI:addChild(mapUI.prevPage)
 
-    local wrap = mapUI:wrapInCollapsableWindow(map:getName(), false, ISMapWrapper)
+    local wrap = mapUI:wrapInCollapsableWindow(map:getName(), false, paperContext.dndPaperWrapper)
     wrap:setInfo(getText("IGUI_Map_Info"))
     wrap:setWantKeyEvents(true)
     mapUI.wrap = wrap
@@ -162,8 +199,6 @@ function dndPaper.onCheckPaper(map, player)
     wrap:setVisible(true)
     wrap:addToUIManager()
     wrap.infoButton:setVisible(false)
-
-    dndPaper.onRender(mapUI)
 
     mapUI:removeChild(mapUI.symbolsUI)
     mapUI.symbolsUI:addToUIManager()
@@ -174,7 +209,7 @@ function dndPaper.onCheckPaper(map, player)
     local styleAPI = mapAPI:getStyleAPI()
 
     local symbolsAPI = mapAPI:getSymbolsAPI()
-    dndPaper.loadSymbols(map, symbolsAPI, paperPage, true)
+    paperContext.loadSymbols(map, symbolsAPI, paperPage, true)
 
     local layer = styleAPI:newTextureLayer("paperDND")
     layer:setMinZoom(25)
@@ -182,7 +217,7 @@ function dndPaper.onCheckPaper(map, player)
     layer:addTexture(0, texPath)
     layer:setBoundsInSquares(10, 10, 10 + paperX2, 10 + paperY2)
 
-    dndPaper.updatePageButtons(mapUI)
+    paperContext.updatePageButtons(mapUI)
 
     if JoypadState.players[player+1] then setJoypadFocus(player, mapUI) end
 end
@@ -208,12 +243,12 @@ function paperContext.addInventoryItemContext(playerID, context, items)
 
             local readOption = context:getOptionFromName(getText("ContextMenu_CheckMap"))
             readOption.name = getText("ContextMenu_Read")
-            readOption.onSelect = dndPaper.onCheckPaper
+            readOption.onSelect = paperContext.onCheckPaper
             --context:addOption(getText("ContextMenu_CheckMap"), map, ISInventoryPaneContextMenu.onCheckMap, player)
 
             local renameOption = context:getOptionFromName(getText("ContextMenu_RenameMap"))
             renameOption.name = getText("ContextMenu_RenameBag")
-            readOption.onSelect = dndPaper.onCheckPaper
+            readOption.onSelect = paperContext.onCheckPaper
             --context:addOption(getText("ContextMenu_RenameMap"), map, ISInventoryPaneContextMenu.onRenameMap, player)
         end
         break
