@@ -14,21 +14,7 @@ paperContext.dndPaperWrapper = ISMapWrapper:derive("paperContext.dndPaperWrapper
 paperContext.dndPaperSymbols = ISWorldMapSymbols:derive("paperContext.dndPaperSymbols")
 
 
-function paperContext.dndPaperSymbols:renderSymbol(symbol, x, y)
-    --[[
-    if self.mapUI:isMouseOver() then
-        if not symbol then return end
-        local scale = ISMap.SCALE * self.mapAPI:getWorldScale()
-        local sym = symbol
-        local symW = sym.image:getWidth() / 2 * scale
-        local symH = sym.image:getHeight() / 2 * scale
-        self.mapUI:drawTextureScaled(sym.image, x-symW, y-symH,
-                sym.image:getWidth() * scale, sym.image:getHeight() * scale,
-                1, sym.textureColor.r, sym.textureColor.g, sym.textureColor.b)
-    end
-    --]]
-end
-
+function paperContext.dndPaperSymbols:renderSymbol(symbol, x, y) end
 
 function paperContext.dndPaperWrapper:close()
     self.mapUI.symbolsUI:removeFromUIManager()
@@ -70,6 +56,15 @@ function paperContext.dndPaperUI:createChildren()
     --self:addChild(self.symbolsUI)
     self.symbolsUI:addToUIManager()
     self.symbolsUI:setVisible(false)
+
+    if activeModIDs:contains("DRAW_ON_MAP") then
+        self.freeHandUI = FreeHandUI:new(self.symbolsUI:getX(), self.symbolsUI:getY()+self.symbolsUI:getHeight()+8, self.symbolsUI:getWidth(), 150, self.symbolsUI)
+        self.freeHandUI:setAnchorLeft(true)
+        self.freeHandUI:setAnchorRight(false)
+        self.freeHandUI:init()
+        self.freeHandUI:setVisible(false)
+        self.freeHandUI:addToUIManager()
+    end
 
     local buttonHgt = FONT_HGT_SMALL + 6
     local buttonPadBottom = 4
