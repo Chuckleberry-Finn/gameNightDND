@@ -5,6 +5,15 @@ if activeModIDs:contains("DRAW_ON_MAP") then
     require "DrawOnMap/WorldMapSymbolTool_FreeHandEraser"
     require "DrawOnMap/Patches/IsWorldMapSymbols_patch_add_spline_tool"
     require "DrawOnMap/Patches/ISMap_patch_create_free_hand_ui"
+
+    paperContext.dndPaperFreeHand = FreeHandUI:derive("paperContext.dndPaperFreeHand")
+
+    function paperContext.dndPaperFreeHand:prerender()
+        local ui = self.symbolsUI
+        self:setX(ui:getX())
+        self:setY(ui:getY()+ui:getHeight()+8)
+        FreeHandUI.prerender(self)
+    end
 end
 
 local dndPaper = require "gameNight - paperDND"
@@ -18,13 +27,15 @@ function paperContext.dndPaperSymbols:renderSymbol(symbol, x, y) end
 
 function paperContext.dndPaperWrapper:close()
     self.mapUI.symbolsUI:removeFromUIManager()
+    self.mapUI.freeHandUI:removeFromUIManager()
     ISMapWrapper.close(self)
 end
 
 
 function paperContext.dndPaperSymbols:prerender()
-    self:setX(self.mapUI.wrap:getX()+self.mapUI.wrap:getWidth()+8)
-    self:setY(self.mapUI.wrap:getY())
+    local ui = self.mapUI.wrap
+    self:setX(ui:getX()+ui:getWidth()+8)
+    self:setY(ui:getY())
     ISWorldMapSymbols.prerender(self)
 end
 
@@ -58,7 +69,7 @@ function paperContext.dndPaperUI:createChildren()
     self.symbolsUI:setVisible(false)
 
     if activeModIDs:contains("DRAW_ON_MAP") then
-        self.freeHandUI = FreeHandUI:new(self.symbolsUI:getX(), self.symbolsUI:getY()+self.symbolsUI:getHeight()+8, self.symbolsUI:getWidth(), 150, self.symbolsUI)
+        self.freeHandUI = paperContext.dndPaperFreeHand:new(self.symbolsUI:getX(), self.symbolsUI:getY()+self.symbolsUI:getHeight()+8, self.symbolsUI:getWidth(), 150, self.symbolsUI)
         self.freeHandUI:setAnchorLeft(true)
         self.freeHandUI:setAnchorRight(false)
         self.freeHandUI:init()
