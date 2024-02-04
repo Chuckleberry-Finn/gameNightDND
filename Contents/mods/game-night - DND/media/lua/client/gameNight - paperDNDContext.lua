@@ -1,5 +1,12 @@
 local paperContext = {}
 
+local activeModIDs = getActivatedMods()
+if activeModIDs:contains("DRAW_ON_MAP") then
+    require "DrawOnMap/WorldMapSymbolTool_FreeHandEraser"
+    require "DrawOnMap/Patches/IsWorldMapSymbols_patch_add_spline_tool"
+    require "DrawOnMap/Patches/ISMap_patch_create_free_hand_ui"
+end
+
 local dndPaper = require "gameNight - paperDND"
 
 paperContext.dndPaperUI = ISMap:derive("paperContext.dndPaperUI")
