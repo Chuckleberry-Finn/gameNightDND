@@ -7,9 +7,9 @@ module Base
 		Type = Map,
 		DisplayName = Character Sheet,
 		Icon = OutOfPlayTextures\characterSheet,
-		Map = gameNight_CharacterSheet,
+		Map = paperAPI_CharacterSheet,
 		WorldStaticModel = CharacterSheet,
-		gameNight_paperPageMax = 2,
+		paperAPI_paperPageMax = 2,
     }
 
     item DrawingPaper {
@@ -18,9 +18,9 @@ module Base
 		Type = Map,
 		DisplayName = Drawing Paper,
 		Icon = OutOfPlayTextures\characterSheet,
-		Map = gameNight_DrawingPaper,
+		Map = paperAPI_DrawingPaper,
 		WorldStaticModel = DrawingPaper,
-		gameNight_paperPageMax = 2,
+		paperAPI_paperPageMax = 2,
     }
 
     item Dice4 {

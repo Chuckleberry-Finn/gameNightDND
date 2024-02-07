@@ -1,6 +1,8 @@
 version=1
+id=3155647614
 title=Game Night: D&D
 description=[h2]Add-On for [url=https://steamcommunity.com/sharedfiles/filedetails/?id=3058279917]GameNight[/url].[/h2]
+description=Recommended: [url=https://steamcommunity.com/sharedfiles/filedetails/?id=2804531012]Draw On The Map[/url] to draw on included papers.
 description=
 description=[url=https://ko-fi.com/chuckleberryfinn][img]https://raw.githubusercontent.com/ChuckTheSheep/chuckImages/main/kofi.png[/img][/url][url=https://discord.gg/SReMnbV4V7][img]https://raw.githubusercontent.com/Chuckleberry-Finn/chuckImages/main/PZmodCommBanner3.png[/img][/url]
 description=
@@ -12,9 +14,9 @@ description=[quote][b]Mac/Linux:[/b] $User\Zomboid\console.txt[/quote]
 description=Upload this file [b]in entirety[/b] to [url=https://github.com/Chuckleberry-Finn/gameNightDND]Github[/url] as an issue.
 description=Share the link in a comment below if it is urgent.
 description=
-description=description=[url=https://github.com/Chuckleberry-Finn/game-night][img]https://raw.githubusercontent.com/Chuckleberry-Finn/chuckImages/main/steamNoGithubYes.png[/img][/url]
+description=[url=https://github.com/Chuckleberry-Finn/game-night][img]https://raw.githubusercontent.com/Chuckleberry-Finn/chuckImages/main/steamNoGithubYes.png[/img][/url]
 description=
 description=
 description=[h3]Copyright 2024 Chuckleberry Finn. This item is not authorized for posting on Steam, except under the Steam account named Chuckleberry Finn.[/h3]
-tags=Build 41;
-visibility=unlisted
+tags=Build 41
+visibility=public
