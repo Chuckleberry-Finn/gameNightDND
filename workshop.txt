@@ -2,6 +2,7 @@ version=1
 id=3155647614
 title=Game Night: D&D
 description=[h2]Add-On for [url=https://steamcommunity.com/sharedfiles/filedetails/?id=3058279917]GameNight[/url].[/h2]
+description=[h3]Includes a full DND dice set, and interactive character sheets/drawing grid-paper.[/h3]
 description=Recommended: [url=https://steamcommunity.com/sharedfiles/filedetails/?id=2804531012]Draw On The Map[/url] to draw on included papers.
 description=
 description=[url=https://ko-fi.com/chuckleberryfinn][img]https://raw.githubusercontent.com/ChuckTheSheep/chuckImages/main/kofi.png[/img][/url][url=https://discord.gg/SReMnbV4V7][img]https://raw.githubusercontent.com/Chuckleberry-Finn/chuckImages/main/PZmodCommBanner3.png[/img][/url]
