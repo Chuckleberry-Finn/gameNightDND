@@ -1,6 +1,7 @@
 module Base
 {
-	model CharacterSheet { mesh = WorldItems/SheetOfPaper, texture = ui/CharacterSheet, scale = 0.02, }
+	model CharacterSheet { mesh = WorldItems/SheetOfPaper, texture = ui/CharacterSheet1, scale = 0.02, }
+	model DrawingPaper { mesh = WorldItems/SheetOfPaper, texture = ui/DrawingPaper1, scale = 0.02, }
 	model DNDBox { mesh = WorldItems/cardpack, texture = Item_Boxes/DNDBox_ground, scale = 0.06, }
 	model Dice4 { mesh = WorldItems/gameNightCube, texture = modelTextures/dice4, scale = 0.0015, }
     model Dice6 { mesh = WorldItems/gameNightCube, texture = modelTextures/dice6, scale = 0.0015, }
