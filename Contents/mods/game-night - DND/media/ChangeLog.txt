@@ -6,3 +6,7 @@
 - Moved drawing paper to ZomboidPaperAPI + fixes UI/model conflict
 - Moved dice into main game-night mod.
 [ ------ ]
+
+[ 5/18/24 ]
+- Tweaks and underlying updates in preparation for new Add-On.
+[ ------ ]
