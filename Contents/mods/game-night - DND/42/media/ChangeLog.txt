@@ -1,0 +1,12 @@
+[ 2/7/24 ]
+- Fixes item models for paper objects.
+[ ------ ]
+
+[ 2/17/24 ]
+- Moved drawing paper to ZomboidPaperAPI + fixes UI/model conflict
+- Moved dice into main game-night mod.
+[ ------ ]
+
+[ 5/25/24 ]
+- Tweaks and underlying updates in preparation for new Add-On.
+[ ------ ]

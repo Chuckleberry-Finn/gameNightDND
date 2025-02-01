@@ -1,0 +1,15 @@
+module Base
+{
+
+    item CharacterSheet {
+		DisplayCategory = GamePiece,
+		Weight = 0.1,
+		Type = Map,
+		DisplayName = Character Sheet,
+		Icon = OutOfPlayTextures\characterSheet,
+		Map = paperAPI_CharacterSheet,
+		WorldStaticModel = CharacterSheet,
+		paperAPI_paperPageMax = 2,
+    }
+
+}
