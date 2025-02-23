@@ -23,5 +23,5 @@ description=
 description=[i][b]Dungeons and Dragons[/b] is a registered trademark of Wizards of the Coast LLC, a subsidiary of Hasbro, Inc. Copyright Wizards of the Coast LLC, a subsidiary of Hasbro, Inc. All rights reserved.[/i]
 description=
 description=[h3]Copyright 2024 Chuckleberry Finn. This item is not authorized for posting on Steam, except under the Steam account named Chuckleberry Finn.[/h3]
-tags=Build 41
+tags=Build 41;Build 42
 visibility=public
