@@ -1,11 +1,14 @@
 module Base
 {
+    item DNDBox {
+        DisplayCategory = GameBox, WeightReduction = 20, Weight = 0.1, ItemType = base:container, Capacity = 2,
+        Icon = Boxes/DNDBox, WorldStaticModel = DNDBox,
+    }
 
     item CharacterSheet {
 		DisplayCategory = GamePiece,
 		Weight = 0.1,
-		Type = Map,
-		DisplayName = Character Sheet,
+		ItemType = base:map,
 		Icon = OutOfPlayTextures\characterSheet,
 		Map = paperAPI_CharacterSheet,
 		WorldStaticModel = CharacterSheet,
